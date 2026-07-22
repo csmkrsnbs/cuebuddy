@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ApiRequestLog {
+  id         String   @id @default(cuid())
+  requestId  String   @unique
+  method     String
+  path       String
+  statusCode Int
+  durationMs Int
+  ipHash     String?
+  userAgent  String?
+  isError    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([path, createdAt])
+  @@index([statusCode, createdAt])
+}
+
+model TranscriptionLog {
+  id                      String   @id @default(cuid())
+  requestId               String   @unique
+  audioSizeBytes          Int?
+  approximateAudioSeconds Int?
+  transcriptHash          String?
+  transcriptPreview       String?
+  createdAt               DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model AnalysisHint {
+  id             String   @id @default(cuid())
+  requestId      String?  @unique
+  hasReference   Boolean  @default(false)
+  confidence     Float    @default(0)
+  referenceType  String?
+  source         String?
+  detectedPhrase String?
+  meaning        String?
+  socialTone     String?
+  suggestedReply String?
+  shortAudioHint String?
+  textHash       String?
+  textPreview    String?
+  language       String?
+  mode           String?
+  createdAt      DateTime @default(now())
+
+  @@index([hasReference, createdAt])
+  @@index([referenceType, createdAt])
+  @@index([confidence])
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  hintId    String?
+  requestId String?
+  rating    String
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([rating, createdAt])
+}
