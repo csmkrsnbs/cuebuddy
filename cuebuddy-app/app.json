@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "CueBuddy",
+    "slug": "cuebuddy",
+    "version": "1.0.0",
+    "scheme": "cuebuddy",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "CueBuddy, kısa konuşma parçalarını yazıya çevirip bağlam analizi sunmak için mikrofon erişimi kullanır."
+      }
+    },
+    "android": {
+      "permissions": [
+        "RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}

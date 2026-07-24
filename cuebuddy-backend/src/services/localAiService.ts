@@ -1,4 +1,3 @@
-
 import { buildCueAnalysisSystemPrompt, buildCueAnalysisUserPrompt } from "../prompts/cueAnalysisPrompt.js";
 import { cueAnalysisJsonSchema } from "../schemas/cueAnalysisSchema.js";
 import { CueAnalysisRequest, CueAnalysisResponse } from "../types/cue.js";
@@ -7,7 +6,7 @@ const ollamaBaseUrl = process.env.OLLAMA_BASE_URL ?? "http://localhost:11434";
 const ollamaAnalysisModel = process.env.OLLAMA_ANALYSIS_MODEL ?? "llama3.1:8b";
 
 const sttBaseUrl = process.env.LOCAL_STT_BASE_URL ?? "http://localhost:8000";
-const sttModel = process.env.LOCAL_STT_MODEL ?? "whisper-small";
+const sttModel = process.env.LOCAL_STT_MODEL ?? "Systran/faster-whisper-small";
 const sttEndpoint = process.env.LOCAL_STT_TRANSCRIPTIONS_PATH ?? "/v1/audio/transcriptions";
 
 export type LocalTranscriptionResult = {
@@ -22,25 +21,28 @@ export async function transcribeAudioWithLocalWhisper(input: {
   mimeType?: string | null;
 }): Promise<LocalTranscriptionResult> {
   const formData = new FormData();
-  // Buffer verisini SharedArrayBuffer ihtimalinden arındırarak
-// gerçek bir ArrayBuffer üzerine kopyala.
-const arrayBuffer = new ArrayBuffer(input.buffer.byteLength);
-const audioBytes = new Uint8Array(arrayBuffer);
-audioBytes.set(input.buffer);
 
-// Global Blob ve FormData aynı web API ailesini kullanır.
-const blob = new globalThis.Blob([arrayBuffer], {
-  type: input.mimeType || "application/octet-stream",
-});
+  // Node Buffer can be backed by SharedArrayBuffer. Copy it into a plain
+  // ArrayBuffer so the Web Blob/FormData types remain compatible.
+  const arrayBuffer = new ArrayBuffer(input.buffer.byteLength);
+  new Uint8Array(arrayBuffer).set(input.buffer);
 
-formData.append("file", blob, input.originalName);
+  const blob = new globalThis.Blob([arrayBuffer], {
+    type: input.mimeType ?? "audio/m4a",
+  });
+
+  formData.append("file", blob, input.originalName);
   formData.append("model", sttModel);
   formData.append("response_format", "json");
 
-  const response = await fetch(`${sttBaseUrl}${sttEndpoint}`, {
-    method: "POST",
-    body: formData,
-  });
+  const response = await fetchWithTimeout(
+    `${sttBaseUrl}${sttEndpoint}`,
+    {
+      method: "POST",
+      body: formData,
+    },
+    Number(process.env.LOCAL_STT_TIMEOUT_MS ?? 120000)
+  );
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
@@ -67,25 +69,30 @@ export async function analyzeCueWithOllama(input: CueAnalysisRequest): Promise<{
   const systemPrompt = buildCueAnalysisSystemPrompt();
   const userPrompt = buildCueAnalysisUserPrompt(input);
 
-  const response = await fetch(`${ollamaBaseUrl}/api/chat`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
+  const response = await fetchWithTimeout(
+    `${ollamaBaseUrl}/api/chat`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
       model: ollamaAnalysisModel,
       stream: false,
+      keep_alive: process.env.OLLAMA_KEEP_ALIVE ?? "15m",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       format: cueAnalysisJsonSchema.schema,
       options: {
-        temperature: 0.2,
+        temperature: 0,
       },
     }),
-  });
+    },
+    Number(process.env.OLLAMA_TIMEOUT_MS ?? 180000)
+  );
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
@@ -126,4 +133,28 @@ function extractJsonObject(value: string): string {
   }
 
   return trimmed;
+}
+
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number
+): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  try {
+    return await fetch(url, {
+      ...init,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error(`Upstream request timed out after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 }

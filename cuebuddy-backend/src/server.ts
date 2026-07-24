@@ -13,19 +13,41 @@ const app = express();
 
 const port = Number(process.env.PORT ?? 3001);
 const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "*";
+const allowedOrigins = allowedOrigin
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 app.use(requestLogger);
 app.use(generalLimiter);
-app.use(cors({ origin: allowedOrigin === "*" ? true : allowedOrigin }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || allowedOrigin === "*" || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("CORS origin not allowed"));
+    },
+    methods: ["GET", "POST", "OPTIONS"],
+  })
+);
 app.use(express.json({ limit: "1mb" }));
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "CueBuddy API",
+    docs: ["/health", "/db/health"],
+  });
+});
 
 app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     service: "cuebuddy-backend",
-    version: "0.1.0-neon-open-source-ai",
+    version: "1.0.0-production",
     ai: {
       analysisProvider: "ollama",
       analysisModel: process.env.OLLAMA_ANALYSIS_MODEL ?? "llama3.1:8b",

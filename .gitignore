@@ -1,0 +1,12 @@
+node_modules/
+cuebuddy-backend/.env
+.env.*
+!.env.example
+dist/
+.next/
+.expo/
+web-build/
+*.log
+.DS_Store
+uploads/*
+!uploads/.gitkeep

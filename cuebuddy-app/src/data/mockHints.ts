@@ -1,0 +1,40 @@
+import { CueHint } from "../types/cue";
+
+export const mockHints: CueHint[] = [
+  {
+    id: "hint_001",
+    detectedPhrase: "Bu ortam biraz final sahnesi gibi oldu.",
+    source: null,
+    referenceType: "social_context",
+    meaning: "Ortam gereğinden fazla dramatikleşti; kişi bunu şakayla yumuşatıyor.",
+    socialTone: "mizahi, dramatik, ortamı hafifletme",
+    suggestedReply: "Fon müziğini açalım o zaman.",
+    shortAudioHint: "Dramatik kapanış şakası. Ortam fazla ciddileşti demek istiyor.",
+    confidence: 0.91,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "hint_002",
+    detectedPhrase: "Bu sadece benim bilgisayarımda çalışıyor.",
+    source: "Developer joke",
+    referenceType: "tech",
+    meaning: "Yazılımcıların, hatanın kendi ortamlarında çıkmadığını anlatırken yaptığı klasik espri.",
+    socialTone: "teknik, ironik, esprili",
+    suggestedReply: "O zaman bilgisayarı prod’a alalım.",
+    shortAudioHint: "Yazılımcı şakası. Kendi makinemde çalışıyor anlamında.",
+    confidence: 0.89,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "hint_003",
+    detectedPhrase: "Kış geliyor gibi.",
+    source: "Popüler kültür göndermesi",
+    referenceType: "culture",
+    meaning: "Yaklaşan sorun, yoğunluk veya hazırlık gerektiren dönem anlamında kullanılıyor.",
+    socialTone: "mizahi, uyarıcı, dramatik",
+    suggestedReply: "Battaniyeyi değil, planı hazırlayalım.",
+    shortAudioHint: "Yaklaşan sorun şakası. Hazırlık gerekiyor demek istiyor.",
+    confidence: 0.86,
+    createdAt: new Date().toISOString(),
+  },
+];

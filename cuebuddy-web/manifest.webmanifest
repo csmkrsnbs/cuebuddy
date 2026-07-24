@@ -1,0 +1,25 @@
+{
+  "name": "CueBuddy — Anında Bağlam Asistanı",
+  "short_name": "CueBuddy",
+  "description": "Konuşmadaki replik, gönderme ve sosyal alt metni yakalar.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090b14",
+  "theme_color": "#7757ff",
+  "lang": "tr",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
