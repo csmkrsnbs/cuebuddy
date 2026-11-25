@@ -215,6 +215,21 @@ function isLowValueText(text: string): boolean {
   return lowValuePhrases.has(normalized);
 }
 
+async function initializeLocalModel(){
+  if(process.env.CUEBUDDY_LOCAL_MODEL_INIT!=="true")return;
+  const base=process.env.OLLAMA_BASE_URL;
+  if(!base || !/^http:\/\/cuebuddy-llm\.railway\.internal:11434\/?$/.test(base))return;
+  const model=process.env.OLLAMA_ANALYSIS_MODEL??"qwen2.5:1.5b";
+  for(let attempt=0;attempt<12;attempt++){
+    try{if(await probeModels(base,"/api/tags",model,"ollama")){console.log("Local analysis model ready");return;}
+      const response=await fetch(base.replace(/\/$/,"")+"/api/pull",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model,stream:false}),signal:AbortSignal.timeout(300000)});
+      if(response.ok){readyCache=null;console.log("Local analysis model installed");return;}
+    }catch{}
+    await new Promise(resolve=>setTimeout(resolve,15000));
+  }
+  console.warn("Local analysis model initialization incomplete");
+}
+void initializeLocalModel();
 app.listen(port, "0.0.0.0", () => {
   console.log(`CueBuddy backend running on http://localhost:${port}`);
 });
