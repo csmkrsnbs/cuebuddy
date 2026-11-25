@@ -1,4 +1,5 @@
 import express from "express";
+import { resolve } from "node:path";
 import cors from "cors";
 import multer from "multer";
 import "dotenv/config";
@@ -12,7 +13,7 @@ import { analyzeCueWithOllama, transcribeAudioWithLocalWhisper } from "./service
 const app = express();
 
 const port = Number(process.env.PORT ?? 3001);
-const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "https://cuebuddy.sokakvitrini.com";
+const allowedOrigin = process.env.ALLOWED_ORIGIN ?? ["https://cuebuddy.sokakvitrini.com", process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : ""].filter(Boolean).join(",");
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
 app.use((_req,res,next)=>{res.setHeader("Cache-Control","no-store");res.setHeader("X-Content-Type-Options","nosniff");next();});
@@ -34,11 +35,12 @@ app.use(
     methods: ["GET", "POST", "OPTIONS"],
   })
 );
-app.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "64kb", inflate:false }));
 
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024, files:1, fields:0, parts:1 } });
 
-app.get("/", (_req, res) => {
+app.use(express.static(resolve(process.cwd(),"../cuebuddy-web"), {index:"index.html",dotfiles:"deny",setHeaders(res,path){if(path.endsWith(".html")||path.endsWith("sw.js"))res.setHeader("Cache-Control","no-cache");}}));
+app.get("/api", (_req, res) => {
   res.json({
     ok: true,
     service: "CueBuddy API",
@@ -213,6 +215,6 @@ function isLowValueText(text: string): boolean {
   return lowValuePhrases.has(normalized);
 }
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`CueBuddy backend running on http://localhost:${port}`);
 });
