@@ -1,4 +1,4 @@
-# CueBuddy v1.0 Production — Web PWA + Mobil + Backend
+# CueBuddy v2.0 Release Candidate — Web PWA + Mobil + Backend
 
 CueBuddy, konuşmada geçen film/dizi/oyun referansı, internet mizahı, teknik terim ve sosyal alt metni algılayıp kısa açıklama ile doğal cevap önerisi sunan bağlam asistanıdır.
 
@@ -55,7 +55,15 @@ npx expo start -c
 - Ham ses kalıcı olarak saklanmaz.
 - `STORE_ANALYSIS_RESULTS=false`
 - `STORE_TEXT_PREVIEW=false`
-- Web geçmişi cihazın localStorage alanında tutulur.
+- Web geçmişi varsayılan olarak kapalıdır. Etkinleştirilirse sadece sonuçlar cihazda tutulur; yeni analizlerde yalnızca oturumun son üç metni işlenir.
 - Aydınlatma ve açık rıza aynı işlem olarak sunulmaz.
 
 > Yasal metinler mevcut teknik mimariye göre hazırlanmış üretim taslaklarıdır. Veri sorumlusunun hukuki unvanı, yurt dışı aktarım mekanizması, saklama süreleri ve VERBİS durumu canlıya alınmadan önce hukuk uzmanıyla doğrulanmalıdır.
+
+## V2 değişiklikleri
+
+- Web mikrofon kaydı ve ağ işleme ayrıldı; en fazla üç bekleyen parça. Durdurma, arka plana geçiş ve sayfa kapanışı bekleyen parçaları siler.
+- /ready, Ollama ve STT model listelerini kontrol eder. Bu kontrol gerçek çıkarım testi değildir. Motorlar hazır görünmeden web analiz başlatmaz.
+- Web API adresi sabittir; ayarlardan değiştirilemez. Sesli çıktı dinleme kapalıyken cihazın TTS motoruyla okunur; kulaklık yönlendirmesi işletim sistemine bağlıdır.
+- Türkçe/İngilizce yanıt ve dört analiz modu; iki alternatif cevap desteği.
+- Render servisleri, gerçek ses örneği ve Expo mobil istemci ayrı kabul testleri gerektirir. 

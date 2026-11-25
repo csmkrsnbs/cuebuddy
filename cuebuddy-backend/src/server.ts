@@ -12,7 +12,10 @@ import { analyzeCueWithOllama, transcribeAudioWithLocalWhisper } from "./service
 const app = express();
 
 const port = Number(process.env.PORT ?? 3001);
-const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "*";
+const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "https://cuebuddy.sokakvitrini.com";
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+app.use((_req,res,next)=>{res.setHeader("Cache-Control","no-store");res.setHeader("X-Content-Type-Options","nosniff");next();});
 const allowedOrigins = allowedOrigin
   .split(",")
   .map((value) => value.trim())
@@ -47,16 +50,20 @@ app.get("/health", (_req, res) => {
   res.json({
     ok: true,
     service: "cuebuddy-backend",
-    version: "1.0.0-production",
+    version: "2.0.0",
     ai: {
       analysisProvider: "ollama",
       analysisModel: process.env.OLLAMA_ANALYSIS_MODEL ?? "llama3.1:8b",
       transcriptionProvider: "local-whisper-compatible",
-      transcriptionBaseUrl: process.env.LOCAL_STT_BASE_URL ?? "http://localhost:8000",
+      transcriptionProviderConfigured: Boolean(process.env.LOCAL_STT_BASE_URL),
     },
     database: databaseStatus(),
   });
 });
+
+let readyCache: {at:number; analysis:boolean; transcription:boolean} | null = null;
+async function probeModels(base:string,path:string,model:string,provider:"ollama"|"stt"):Promise<boolean>{try{const r=await fetch(base.replace(/\/$/,"")+path,{signal:AbortSignal.timeout(4500)});if(!r.ok)return false;const j=await r.json() as {models?:{name?:string;model?:string}[];data?:{id?:string}[]};const ids=provider==="ollama"?j.models?.map(m=>m.name||m.model):j.data?.map(m=>m.id);return Boolean(ids?.some(id=>id===model||id===model+":latest"));}catch{return false;}}
+app.get("/ready",async (_req,res)=>{if(!readyCache||Date.now()-readyCache.at>15000){const [analysis,transcription]=await Promise.all([probeModels(process.env.OLLAMA_BASE_URL??"http://localhost:11434","/api/tags",process.env.OLLAMA_ANALYSIS_MODEL??"llama3.1:8b","ollama"),probeModels(process.env.LOCAL_STT_BASE_URL??"http://localhost:8000","/v1/models",process.env.LOCAL_STT_MODEL??"Systran/faster-whisper-small","stt")]);readyCache={at:Date.now(),analysis,transcription};}res.json({ok:readyCache.analysis&&readyCache.transcription,analysis:readyCache.analysis,transcription:readyCache.transcription,version:"2.0.0"});});
 
 app.get("/db/health", async (_req, res) => {
   const connected = await checkDatabaseConnection();
@@ -68,6 +75,8 @@ app.get("/db/health", async (_req, res) => {
 });
 
 app.get("/metrics", (_req, res) => {
+  const key=process.env.METRICS_TOKEN;
+  if(!key||_req.get("authorization")!==`Bearer ${key}`){res.sendStatus(404);return;}
   res.json(getUsageSnapshot());
 });
 
@@ -80,6 +89,7 @@ app.post("/transcribe", transcribeLimiter, upload.single("audio"), async (req, r
       return res.status(400).json({ error: "audio dosyası gerekli. FormData alan adı 'audio' olmalı.", requestId: req.requestId });
     }
 
+    if (!/^(audio\/(webm|mp4|mpeg|wav|x-wav|ogg|m4a|aac|x-m4a)|video\/webm)(;.*)?$/i.test(req.file.mimetype)) return res.status(415).json({error:"Desteklenmeyen ses biçimi"});
     const originalName = req.file.originalname || "cuebuddy-recording.m4a";
     const transcription = await transcribeAudioWithLocalWhisper({
       buffer: req.file.buffer,
@@ -101,7 +111,7 @@ app.post("/transcribe", transcribeLimiter, upload.single("audio"), async (req, r
 
     return res.json({ ...transcription, requestId: req.requestId });
   } catch (error) {
-    console.error("POST /transcribe error:", { requestId: req.requestId, error });
+    console.error("POST /transcribe error:", { requestId: req.requestId, errorType: error instanceof Error ? error.name : "UnknownError" });
     recordEndpointUsage({ endpoint: "transcribe", durationMs: Date.now() - startedAt, ok: false });
     return res.status(500).json({ error: "Local transkripsiyon başarısız. LOCAL_STT_BASE_URL servisinin çalıştığını kontrol et.", requestId: req.requestId });
   }
@@ -111,7 +121,8 @@ app.post("/analyze", analyzeLimiter, async (req, res) => {
   const startedAt = Date.now();
 
   try {
-    const body = req.body as CueAnalysisRequest;
+    const raw = (req.body ?? {}) as CueAnalysisRequest;
+    const body: CueAnalysisRequest = {text: raw.text, language: raw.language==="en"?"en":"tr", mode: ["social","movie_series","game","business"].includes(raw.mode??"")?raw.mode:"social", recentContext: Array.isArray(raw.recentContext)?raw.recentContext.filter((x): x is string=>typeof x==="string").slice(-3).map(x=>x.slice(0,400)):[]};
 
     if (!body.text || typeof body.text !== "string") {
       recordEndpointUsage({ endpoint: "analyze", durationMs: Date.now() - startedAt, ok: false });
@@ -182,13 +193,13 @@ app.post("/feedback", async (req, res) => {
 });
 
 function buildEmptyAnalysis(): CueAnalysisResponse {
-  return { has_reference: false, confidence: 0, reference_type: null, source: null, detected_phrase: null, meaning: null, social_tone: null, suggested_reply: null, short_audio_hint: null };
+  return { has_reference: false, confidence: 0, reference_type: null, source: null, detected_phrase: null, meaning: null, social_tone: null, suggested_reply: null, short_audio_hint: null, alternative_replies: [] };
 }
 
 function normalizeCueAnalysis(input: CueAnalysisResponse): CueAnalysisResponse {
   const confidence = clamp(Number(input.confidence ?? 0), 0, 1);
   if (!input.has_reference || confidence < 0.5) return { ...buildEmptyAnalysis(), confidence };
-  return { has_reference: Boolean(input.has_reference), confidence, reference_type: input.reference_type ?? "unknown", source: input.source ?? null, detected_phrase: input.detected_phrase ?? null, meaning: input.meaning ?? null, social_tone: input.social_tone ?? null, suggested_reply: input.suggested_reply ?? null, short_audio_hint: input.short_audio_hint ?? null };
+  return { has_reference: Boolean(input.has_reference), confidence, reference_type: input.reference_type ?? "unknown", source: input.source ?? null, detected_phrase: input.detected_phrase ?? null, meaning: input.meaning ?? null, social_tone: input.social_tone ?? null, suggested_reply: input.suggested_reply ?? null, short_audio_hint: typeof input.short_audio_hint==="string"?input.short_audio_hint.slice(0,250):null, alternative_replies: Array.isArray(input.alternative_replies)?input.alternative_replies.filter((x):x is string=>typeof x==="string").slice(0,2).map(x=>x.slice(0,240)):[] };
 }
 
 function clamp(value: number, min: number, max: number): number {

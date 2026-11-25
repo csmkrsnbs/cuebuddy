@@ -29,4 +29,5 @@ export type CueAnalysisResponse = {
   social_tone: string | null;
   suggested_reply: string | null;
   short_audio_hint: string | null;
+  alternative_replies?: string[];
 };

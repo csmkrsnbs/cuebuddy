@@ -1,0 +1,25 @@
+name: CueBuddy checks
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [v2-final]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --check cuebuddy-web/app.js && node --check cuebuddy-web/sw.js
+      - run: npm ci
+        working-directory: cuebuddy-backend
+      - run: npm run db:generate && npm run typecheck
+        working-directory: cuebuddy-backend
+        env:
+          DATABASE_URL: postgresql://local:local@localhost:5432/local
