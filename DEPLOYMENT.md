@@ -1,4 +1,4 @@
-# CueBuddy v1.0 Canlıya Alma
+# CueBuddy v2.0 Canlıya Alma
 
 ## 1. Backend — Render
 
@@ -53,6 +53,7 @@ Kalıcı kullanımda başlangıç scripti veya özel template hazırlanmalıdır
 
 ```bash
 curl https://cuebuddy.onrender.com/health
+curl https://cuebuddy.onrender.com/ready
 curl https://cuebuddy.onrender.com/db/health
 ```
 
@@ -65,6 +66,12 @@ curl -X POST https://cuebuddy.onrender.com/analyze   -H "Content-Type: applicati
 Ses testi canlıya çıkıştan önce gerçek `.m4a`, `.wav` veya `.webm` dosyasıyla tamamlanmalıdır.
 
 ## 5. Son kontrol
+
+- [ ] /ready analiz ve transkripsiyon için true döndürüyor.
+- [ ] Gerçek mikrofon testi, durdurma ve arka plana geçiş doğrulandı.
+- [ ] METRICS_TOKEN tanımlıysa metrikler yalnızca yetkili istekle okunuyor.
+- [ ] STT ve Ollama model adları /v1/models ve /api/tags listelerindeki adlarla eşleşiyor.
+
 
 - [ ] Web HTTPS üzerinde açılıyor.
 - [ ] PWA manifest ve service worker çalışıyor.
