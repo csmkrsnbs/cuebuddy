@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [v2-final]
+    branches: [main, v2-final, v2-final-verification]
 permissions:
   contents: read
 jobs:
@@ -23,3 +23,8 @@ jobs:
         working-directory: cuebuddy-backend
         env:
           DATABASE_URL: postgresql://local:local@localhost:5432/local
+          DIRECT_URL: postgresql://local:local@localhost:5432/local
+
+      - run: npm audit --omit=dev --audit-level=high
+        working-directory: cuebuddy-backend
+        continue-on-error: true
