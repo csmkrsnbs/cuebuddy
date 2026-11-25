@@ -80,6 +80,7 @@ export const cueAnalysisJsonSchema = {
           { type: "null" }
         ]
       },
+      alternative_replies: { type: "array", items: { type: "string" }, maxItems: 2, description: "En fazla iki kısa alternatif doğal cevap; referans yoksa boş dizi." },
       short_audio_hint: {
         anyOf: [
           {
@@ -99,7 +100,8 @@ export const cueAnalysisJsonSchema = {
       "meaning",
       "social_tone",
       "suggested_reply",
-      "short_audio_hint"
+      "short_audio_hint",
+      "alternative_replies"
     ]
   }
 } as const;
