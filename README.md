@@ -1,4 +1,4 @@
-# CueBuddy v2.0 Release Candidate — Web PWA + Mobil + Backend
+# CueBuddy v2.1 — Railway — Web PWA + Mobil + Backend
 
 CueBuddy, konuşmada geçen film/dizi/oyun referansı, internet mizahı, teknik terim ve sosyal alt metni algılayıp kısa açıklama ile doğal cevap önerisi sunan bağlam asistanıdır.
 
@@ -16,10 +16,10 @@ CueBuddy, konuşmada geçen film/dizi/oyun referansı, internet mizahı, teknik 
 Backend varsayılanı:
 
 ```text
-https://cuebuddy.onrender.com
+https://cuebuddy.sokakvitrini.com
 ```
 
-Web istemci yalnızca backend’e bağlanır. RunPod ve Neon bağlantı bilgileri frontend’e konulmaz.
+Web ve API aynı Railway hizmeti ve HTTPS alan adı üzerinden sunulur. RunPod ve Neon bağlantı bilgileri frontend’e konulmaz.
 
 ## Hızlı başlangıç
 
