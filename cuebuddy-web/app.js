@@ -1,5 +1,5 @@
 "use strict";
-const API="https://cuebuddy.onrender.com";
+const API=location.origin;
 const $=id=>document.getElementById(id);
 const defaults={threshold:70,autoSpeak:false,autoLoop:true,storeHistory:false,language:"tr",mode:"social"};
 function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||"null")??fallback}catch{return fallback}}
