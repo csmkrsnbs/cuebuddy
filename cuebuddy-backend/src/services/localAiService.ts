@@ -41,13 +41,13 @@ export async function transcribeAudioWithLocalWhisper(input: {
       method: "POST",
       body: formData,
     },
-    Number(process.env.LOCAL_STT_TIMEOUT_MS ?? 120000)
+    Number(process.env.LOCAL_STT_TIMEOUT_MS ?? 22000)
   );
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "");
     throw new Error(
-      `Local STT başarısız: ${response.status}${errorText ? ` - ${errorText.slice(0, 300)}` : ""}`
+      `Local STT başarısız: ${response.status}${errorText ? ` - ${"upstream error"}` : ""}`
     );
   }
 
@@ -91,7 +91,7 @@ export async function analyzeCueWithOllama(input: CueAnalysisRequest): Promise<{
       },
     }),
     },
-    Number(process.env.OLLAMA_TIMEOUT_MS ?? 180000)
+    Number(process.env.OLLAMA_TIMEOUT_MS ?? 27000)
   );
 
   if (!response.ok) {
