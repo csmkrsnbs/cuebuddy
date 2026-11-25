@@ -11,27 +11,27 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icons/icon-192.png">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
-  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/app.css?v=2">
   <title>CueBuddy — Anında bağlam asistanı</title>
 </head>
 <body>
   <div class="shell">
     <header class="topbar">
-      <a class="brand" href="#home" aria-label="CueBuddy ana sayfa"><span class="brandmark">C</span><span>CueBuddy</span></a>
-      <div class="top-actions"><span id="apiBadge" class="badge">API kontrol ediliyor</span><button id="installBtn" class="ghost hidden">Ana ekrana ekle</button></div>
+      <a id="brandHome" class="brand" href="#home" aria-label="CueBuddy ana sayfa"><span class="brandmark">C</span><span>CueBuddy</span></a>
+      <div class="top-actions"><span id="apiBadge" class="badge">API kontrol ediliyor</span><button id="retryApi" class="ghost" aria-label="Servisleri yeniden kontrol et">Yenile</button><button id="installBtn" class="ghost hidden">Ana ekrana ekle</button></div>
     </header>
 
     <main>
       <section id="homeView" class="view active">
         <div class="hero">
           <div>
-            <span class="eyebrow">Sokak Vitrini altyapısında</span>
-            <h1>Konuşmadaki göndermeyi <em>kaçırma.</em></h1>
-            <p>Film repliği, oyun göndermesi, internet mizahı veya sosyal alt metin… CueBuddy kısa parçaları analiz eder ve kulaklıktan okunabilecek net bir ipucu üretir.</p>
+            <span class="eyebrow">ANLIK BAĞLAM ASİSTANI</span>
+            <h1>Konuşmayı <em>yakala.</em></h1>
+            <p>Göndermeleri anla. Bağlamı yakala. Doğal cevaplar üret.</p>
           </div>
           <div class="status-card">
             <div class="pulse" id="pulse"></div>
-            <strong id="listenStatus">Hazır</strong>
+            <strong id="listenStatus" role="status">Hazır</strong><span id="micState">Mikrofon kapalı</span>
             <span id="listenSub">Mikrofonu başlatınca 5 saniyelik parçalar analiz edilir.</span>
           </div>
         </div>
@@ -47,13 +47,13 @@
           <div class="result-head"><span id="typePill" class="type-pill">Referans</span><span id="confidence"></span></div>
           <h2 id="source">—</h2>
           <p id="meaning"></p>
-          <div class="reply-box"><span>Doğal cevap önerisi</span><strong id="reply"></strong></div>
+          <div class="reply-box"><span>Doğal cevap önerisi</span><strong id="reply"></strong><div id="alternatives" class="alternatives"></div></div>
           <div class="result-actions"><button id="speakBtn" class="primary-small">Kulaklıktan oku</button><button id="copyBtn" class="ghost">Cevabı kopyala</button></div>
         </section>
 
-        <section class="manual-card">
+        <div class="category-row"><span>Film &amp; Dizi</span><span>Sosyal Bağlam</span><span>Oyun &amp; Mizah</span><span>Teknik Terimler</span></div><section class="manual-card">
           <h2>Metinle dene</h2>
-          <p>Ses testini daha sonra yapacaksan, sistemi şu an metinle doğrulayabilirsin.</p>
+          <p>Bir cümle yaz ve bağlamını, olası anlamını ve cevap önerilerini öğren.</p>
           <textarea id="manualText" maxlength="1200" placeholder="Örnek: Winter is coming."></textarea>
           <button id="analyzeBtn" class="primary">Analiz et</button>
         </section>
@@ -69,16 +69,16 @@
         <div class="settings-card">
           <label><span>Güven eşiği</span><output id="thresholdOut">70%</output></label>
           <input id="threshold" type="range" min="40" max="95" value="70">
-          <label class="switch-row"><span>Sonucu otomatik seslendir</span><input id="autoSpeak" type="checkbox"></label>
+          <label class="switch-row"><span>Dinleme kapalıyken sonucu otomatik seslendir</span><input id="autoSpeak" type="checkbox"></label>
           <label class="switch-row"><span>5 saniyelik otomatik dinleme</span><input id="autoLoop" type="checkbox" checked></label>
-          <label><span>API adresi</span><input id="apiBase" type="url" value="https://cuebuddy.onrender.com"></label>
+          <label class="switch-row"><span>Analiz geçmişini cihazda sakla</span><input id="storeHistory" type="checkbox"></label><label><span>Yanıt dili</span><select id="language"><option value="tr">Türkçe</option><option value="en">English</option></select></label><label><span>Analiz modu</span><select id="mode"><option value="social">Sosyal bağlam</option><option value="movie_series">Film &amp; Dizi</option><option value="game">Oyun &amp; Mizah</option><option value="business">İş &amp; Teknik</option></select></label>
           <button id="saveSettings" class="primary">Ayarları kaydet</button>
         </div>
-        <div class="privacy-note"><strong>Gizlilik varsayılanı</strong><p>Geçmiş bu cihazın tarayıcı alanında tutulur. Backend ayarları ham metin ve analiz içeriğini varsayılan olarak saklamayacak şekilde hazırlanmıştır.</p></div>
+        <div class="privacy-note"><strong>Gizlilik varsayılanı</strong><p>Geçmiş kaydı varsayılan olarak kapalıdır; açılırsa yalnızca sonuçlar bu cihazda tutulur. Backend ayarları ham metin ve analiz içeriğini varsayılan olarak saklamayacak şekilde hazırlanmıştır.</p></div>
       </section>
 
       <section id="aboutView" class="view">
-        <div class="section-title"><div><span class="eyebrow">CueBuddy v1.0</span><h1>Hakkında ve yasal</h1></div></div>
+        <div class="section-title"><div><span class="eyebrow">CueBuddy v2.0</span><h1>Hakkında ve yasal</h1></div></div>
         <div class="legal-grid">
           <a href="/legal/kvkk-aydinlatma.html">KVKK Aydınlatma Metni</a>
           <a href="/legal/gizlilik.html">Gizlilik Politikası</a>
@@ -98,16 +98,16 @@
     </nav>
   </div>
 
-  <div id="noticeModal" class="modal">
+  <div id="noticeModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="noticeTitle">
     <div class="modal-card">
       <span class="eyebrow">Mikrofon kullanılmadan önce</span>
-      <h2>Kısa gizlilik bilgilendirmesi</h2>
-      <p>Dinleme başlatıldığında tarayıcı mikrofon izni ister. Ses, transkripsiyon amacıyla CueBuddy backend’ine ve yapılandırılmış konuşma-yazı servisine aktarılır. Ham ses kalıcı olarak saklanmaz; detaylı bilgi aydınlatma metnindedir.</p>
+      <h2 id="noticeTitle">Mikrofon ve gizlilik</h2>
+      <p>Dinleme başlatıldığında tarayıcı mikrofon izni ister. Ses, transkripsiyon amacıyla CueBuddy backend’ine ve yapılandırılmış konuşma-yazı servisine aktarılır. Ham sesin kalıcı olarak saklanması amaçlanmaz. Yalnızca kayıt için yetkiniz olan ve katılımcıların bilgilendirildiği konuşmalarda kullanın. Arka plana geçildiğinde dinleme kapanır.</p>
       <div class="modal-links"><a href="/legal/kvkk-aydinlatma.html" target="_blank">Aydınlatma metni</a><a href="/legal/gizlilik.html" target="_blank">Gizlilik politikası</a></div>
-      <button id="noticeOk" class="primary">Bilgilendirmeyi gördüm</button>
+      <label class="consent"><input id="consentCheck" type="checkbox"> Bilgilendirmeyi okudum; bu konuşmayı işlemek için gerekli izinlere sahibim.</label><div class="result-actions"><button id="noticeOk" class="primary">Dinlemeyi başlat</button><button id="noticeCancel" class="ghost">Vazgeç</button></div>
     </div>
   </div>
   <div id="toast" class="toast hidden"></div>
-  <script src="/app.js" defer></script>
+  <script src="/app.js?v=2" defer></script>
 </body>
 </html>
