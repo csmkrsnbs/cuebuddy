@@ -1,0 +1,38 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');let n=0;
+const check=(name,fn)=>{fn();n++;console.log('PASS '+name)};
+const code='local-test-only-123456789';process.env.CUEBUDDY_VOICE_ACCESS_CODE=code;process.env.OPENAI_API_KEY='local-mock-not-a-real-key';delete process.env.OPENAI_REALTIME_MODEL;delete process.env.CUEBUDDY_TRANSCRIBE_MODEL;
+const session=require('../api/session.js'),practice=require('../api/practice.js');
+let calls=[],reply=null;global.fetch=async(url,opt)=>{calls.push({url,opt});if(!reply)throw Error('unexpected network');return reply};
+async function invoke(handler,body,key=code,method='POST'){const r={code:200,body:null,headers:{},setHeader(k,v){this.headers[k]=v},status(n){this.code=n;return this},json(x){this.body=x;return this},send(x){this.body=x;return this}};await handler({method,headers:{'x-cuebuddy-code':key},body},r);return r}
+const s={sdp:'v=0\r\n',mode:'engineering',language:'en',consent:true,domain:'energy'};
+const p={action:'transcribe',language:'en',domain:'energy',audio:'YWJj',mime:'audio/webm',consent:true};
+(async()=>{
+for(const f of ['text.js','practice.js','context.js','api/session.js','api/practice.js','api/document.js'])check('syntax '+f,()=>new Function(read(f)));
+for(const f of ['index.html','teleprompter.html','practice.html'])check('unique DOM IDs '+f,()=>{const ids=[...read(f).matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);assert.equal(new Set(ids).size,ids.length)});
+check('recording explicit opt-in',()=>{assert.doesNotMatch(read('index.html'),/id="saveReview" checked/);assert.doesNotMatch(read('teleprompter.html'),/id="saveReview" checked/)});
+check('frame protection',()=>{const h=JSON.parse(read('vercel.json')).headers[0].headers;assert(h.some(x=>x.key==='X-Frame-Options'&&x.value==='DENY'));assert(h.some(x=>x.key==='Content-Security-Policy'&&x.value.includes("frame-ancestors 'none'")))});
+let r=await invoke(session,s,'bad');check('session access denied',()=>assert.equal(r.code,401));
+r=await invoke(session,{...s,consent:false});check('session consent required',()=>assert.equal(r.code,400));
+r=await invoke(session,{...s,cvText:'private CV'});check('document consent required',()=>assert.equal(r.code,400));
+r=await invoke(session,{...s,sdp:'invalid'});check('invalid SDP rejected',()=>assert.equal(r.code,400));
+r=await invoke(practice,p,'bad');check('practice access denied',()=>assert.equal(r.code,401));
+r=await invoke(practice,{...p,domain:'invalid'});check('invalid profession rejected',()=>assert.equal(r.code,400));
+r=await invoke(practice,{...p,audio:''});check('empty audio rejected',()=>assert.equal(r.code,400));
+check('no upstream calls for rejected input',()=>assert.equal(calls.length,0));
+reply={ok:true,text:async()=>'v=0\r\n'};r=await invoke(session,s);check('mock SDP handshake',()=>{assert.equal(r.code,200);const cfg=JSON.parse(calls.at(-1).opt.body.get('session'));assert.equal(cfg.audio.input.turn_detection.create_response,false);assert.equal(cfg.audio.input.turn_detection.interrupt_response,false)});
+reply={ok:true,json:async()=>({text:'MOSFET and KNX'})};r=await invoke(practice,p);check('mock transcription',()=>{assert.equal(r.code,200);assert.equal(r.body.text,'MOSFET and KNX')});
+reply={ok:true,json:async()=>({text:' '})};r=await invoke(practice,p);check('empty transcription rejected',()=>assert.equal(r.code,422));
+const e={action:'evaluate',question:'Explain MOSFET',answer:'A voltage-controlled transistor.',domain:'energy',level:'intermediate',language:'en',consent:true};
+const feedback={technical:80,clarity:85,structure:75,language:90,strengths:'Valid definition',gaps:'Explain channel control',modelAnswer:'Educational example',followup:'How is the channel formed?',evidence:'Plausible; unverified',verification:'Consult datasheet'};
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify(feedback)}]}]})};r=await invoke(practice,e);check('structured feedback',()=>{assert.equal(r.code,200);assert.equal(r.body.evidence,feedback.evidence)});
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify({...feedback,technical:101})}]}]})};r=await invoke(practice,e);check('invalid score rejected',()=>assert.equal(r.code,502));
+const src=read('text.js'),start=src.indexOf('function wrapReadingLines('),end=src.indexOf('function renderReading(',start);const wrap=new Function('MAX_LINE_CHARS',src.slice(start,end)+'return wrapReadingLines')(31);
+check('31-character wrapping preserves words',()=>{const s='I would first identify the root cause of the problem.';const lines=wrap(s);assert.equal(lines.join(' '),s);assert(lines.every(x=>Array.from(x).length<=31))});
+const rv=src.slice(src.indexOf('let reviewEnabled='),src.indexOf('function reviewQuestion('));const review=new Function(rv+'function renderReview(){};return {reviewBegin,reviewItem,reviewTranscript,reviewAnswer,reviewEnd,rows:()=>[...reviewEntries.values()]};')();
+check('review opt-out stores nothing',()=>{review.reviewBegin(false,'test',1000);review.reviewItem('x',1100);assert.equal(review.rows().length,0)});
+check('review dedup and late transcript',()=>{review.reviewBegin(true,'test',1000);review.reviewItem('x',1100);review.reviewItem('x',1200);review.reviewAnswer('x','answer','completed');review.reviewTranscript('x','question');assert.equal(review.rows().length,1);assert.equal(review.rows()[0].question,'question')});
+check('completed review immutable',()=>{review.reviewAnswer('x','other','incomplete');assert.equal(review.rows()[0].answer,'answer')});
+check('interrupted review status',()=>{review.reviewItem('y',1300);review.reviewEnd('stopped',1400);assert.equal(review.rows()[1].state,'interrupted')});
+console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
+})().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
