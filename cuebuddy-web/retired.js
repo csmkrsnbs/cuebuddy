@@ -1,0 +1,1 @@
+if("serviceWorker" in navigator){navigator.serviceWorker.getRegistrations().then(rs=>Promise.all(rs.map(r=>r.unregister()))).catch(()=>{});if("caches" in window)caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("cuebuddy-")).map(k=>caches.delete(k)))).catch(()=>{});}
