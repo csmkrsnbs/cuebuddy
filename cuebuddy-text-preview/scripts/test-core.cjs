@@ -54,5 +54,14 @@ check('custom role inputs and reader link',()=>{for(const f of ['index.html','te
 r=await invoke(session,{...s,domain:'custom'});check('custom voice role required',()=>assert.equal(r.code,400));
 reply={ok:true,text:async()=>'v=0'};r=await invoke(session,{...s,domain:'custom',role:'Mimar'});check('authorized custom voice profile',()=>{assert.equal(r.code,200);const conf=JSON.parse(calls.at(-1).opt.body.get('session'));assert(conf.instructions.includes('Mimar'));assert(conf.instructions.includes('undisclosed help'))});
 check('standalone reader stage separation',()=>{const h=read('reader.html');assert(h.includes('readerSetup").hidden=true'));assert(h.includes('readerSetup").hidden=false'));assert(h.includes('id="marginValue"'))});
+const cv=require('../api/cv.js');
+const cvInput={source:'Example Candidate, Computer Engineer, BSc Computer Engineering',target:'Computer Engineer',language:'en',consent:true};
+r=await invoke(cv,cvInput,'bad');check('CV access code required',()=>assert.equal(r.code,401));
+r=await invoke(cv,{...cvInput,consent:false});check('CV consent required',()=>assert.equal(r.code,400));
+r=await invoke(cv,{...cvInput,source:''});check('CV empty source rejected',()=>assert.equal(r.code,400));
+const cvFixture={name:'Example Candidate',headline:'Computer Engineer',contact:'',linkedin:'',summary:'Computer engineering graduate.',experience:'',skills:'',projects:'',education:'BSc Computer Engineering',languages:''};
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify(cvFixture)}]}]})};r=await invoke(cv,cvInput);check('CV structured draft',()=>{assert.equal(r.code,200);assert.equal(r.body.name,cvFixture.name);assert.equal(r.body.experience,'');const body=JSON.parse(calls.at(-1).opt.body);assert.equal(body.store,false);assert(body.instructions.includes('Never invent experience'))});
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify({...cvFixture,name:'X'.repeat(101)})}]}]})};r=await invoke(cv,cvInput);check('CV invalid model output rejected',()=>assert.equal(r.code,502));
+check('CV single template and approval controls',()=>{const h=read('cv.html'),j=read('cv.js');new Function(j);assert(h.includes('size:A4'));assert(h.includes('id="approved"'));assert(h.includes('id="photoFile"'));assert(j.includes('window.print()'));assert(j.includes('!fits'));assert(j.includes('!$("approved").checked'));for(const f of ['index.html','teleprompter.html','practice.html'])assert(read(f).includes('href="/cv.html"'))});
 console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
 })().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
