@@ -24,8 +24,8 @@ reply={ok:true,text:async()=>'v=0\r\n'};r=await invoke(session,s);check('mock SD
 reply={ok:true,json:async()=>({text:'MOSFET and KNX'})};r=await invoke(practice,p);check('mock transcription',()=>{assert.equal(r.code,200);assert.equal(r.body.text,'MOSFET and KNX')});
 reply={ok:true,json:async()=>({text:' '})};r=await invoke(practice,p);check('empty transcription rejected',()=>assert.equal(r.code,422));
 const e={action:'evaluate',question:'Explain MOSFET',answer:'A voltage-controlled transistor.',domain:'energy',level:'intermediate',language:'en',consent:true};
-const feedback={technical:80,clarity:85,structure:75,language:90,strengths:'Valid definition',gaps:'Explain channel control',modelAnswer:'Educational example',followup:'How is the channel formed?',evidence:'Plausible; unverified',verification:'Consult datasheet'};
-reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify(feedback)}]}]})};r=await invoke(practice,e);check('structured feedback',()=>{assert.equal(r.code,200);assert.equal(r.body.evidence,feedback.evidence)});
+const feedback={technical:80,clarity:85,structure:75,language:90,reasoning:70,risk:60,validation:80,decisionAnalysis:"Compare alternatives and verify",strengths:'Valid definition',gaps:'Explain channel control',modelAnswer:'Educational example',followup:'How is the channel formed?',evidence:'Plausible; unverified',verification:'Consult datasheet'};
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify(feedback)}]}]})};r=await invoke(practice,e);check('structured feedback',()=>{assert.equal(r.code,200);assert.equal(r.body.evidence,feedback.evidence);assert.equal(r.body.score,77);assert.equal(r.body.rubricVersion,"analyst-v1")});
 reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify({...feedback,technical:101})}]}]})};r=await invoke(practice,e);check('invalid score rejected',()=>assert.equal(r.code,502));
 const src=read('text.js'),start=src.indexOf('function wrapReadingLines('),end=src.indexOf('function renderReading(',start);const wrap=new Function('MAX_LINE_CHARS',src.slice(start,end)+'return wrapReadingLines')(31);
 check('31-character wrapping preserves words',()=>{const s='I would first identify the root cause of the problem.';const lines=wrap(s);assert.equal(lines.join(' '),s);assert(lines.every(x=>Array.from(x).length<=31))});
@@ -42,5 +42,12 @@ r=await invoke(practice,{...p,domain:'custom'});check('custom profession require
 reply={ok:true,json:async()=>({text:'example'})};r=await invoke(practice,{...p,domain:'custom',role:'Mimar'});check('custom profession transcription',()=>assert.equal(r.code,200));
 check('presentation focus and controls',()=>{const h=read('reader.html');assert.match(h,/25dvh/);assert.match(h,/opacity:\.4/);assert.match(h,/2000/);assert.match(h,/value="90" step="5"/);for(let v=60;v<=220;v+=10)assert(h.includes('value="'+v+'"'));assert.match(h,/id="showControls"/)});
 check('AI disclosure remains visible',()=>{for(const f of ['index.html','teleprompter.html']){const h=read(f);assert.match(h,/class="disclosure">AI destekli · izinli prova/);assert.match(h,/class="technical-details"/)}});
+reply={ok:true,json:async()=>({output:[{content:[{type:'output_text',text:JSON.stringify({...feedback,reasoning:101})}]}]})};r=await invoke(practice,e);check('analyst invalid dimension rejected',()=>assert.equal(r.code,502));
+const diffSrc=read('practice.js');const diff=new Function(diffSrc.slice(diffSrc.indexOf('function transcriptDiff('),diffSrc.indexOf('function load(q)'))+'return transcriptDiff')();
+check('transcript correction substitution',()=>assert.deepEqual(diff('MOSFET gate','MOSFET drain'),{edits:1,words:2}));
+check('transcript correction deletion',()=>assert.deepEqual(diff('the gate voltage','gate voltage'),{edits:1,words:3}));
+check('transcript correction unchanged',()=>assert.deepEqual(diff('KNX, DALI','knx dali'),{edits:0,words:2}));
+check('transcript correction empty reference',()=>assert.equal(diff('','text'),null));
+check('practice cancel and timeout guards',()=>{assert.match(diffSrc,/pendingRequest\?\.abort\(\)/);assert.match(diffSrc,/55000/);assert.match(diffSrc,/signal:controller.signal/)});
 console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
 })().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
