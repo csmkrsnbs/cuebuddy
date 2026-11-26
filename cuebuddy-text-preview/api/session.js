@@ -5,7 +5,7 @@ const domains={"energy":"Elektrik-Elektronik Mühendisi","systems":"Bilgisayar M
 const languages={tr:'Turkish',en:'English',auto:"the speaker's language"};
 module.exports=async function(req,res){
 res.setHeader('Cache-Control','no-store');
-if(req.method==='GET')return res.status(200).json({configured:!!process.env.OPENAI_API_KEY&&(process.env.CUEBUDDY_VOICE_ACCESS_CODE||'').length>=16,version:'5.0.0-rc.13',output:'text',holdSeconds:30});
+if(req.method==='GET')return res.status(200).json({configured:!!process.env.OPENAI_API_KEY&&(process.env.CUEBUDDY_VOICE_ACCESS_CODE||'').length>=16,version:'5.0.0-rc.14',output:'text',holdSeconds:30});
 if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
 const key=process.env.OPENAI_API_KEY,expected=process.env.CUEBUDDY_VOICE_ACCESS_CODE,code=req.headers['x-cuebuddy-code'];
 if(!key||!expected||expected.length<16)return res.status(503).json({error:'Motor henüz yapılandırılmadı.'});
