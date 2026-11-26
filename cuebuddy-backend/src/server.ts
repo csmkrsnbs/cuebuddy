@@ -9,6 +9,8 @@ import { getUsageSnapshot, recordAnalyzeUsage, recordEndpointUsage, recordTransc
 import { checkDatabaseConnection, databaseStatus, logAnalysisToDatabase, logTranscriptionToDatabase, saveFeedbackToDatabase } from "./services/databaseService.js";
 import { analyzeCueWithOllama, transcribeAudioWithLocalWhisper } from "./services/localAiService.js";
 
+import { installVoice } from "./voice.js";
+
 const app = express();
 
 const port = Number(process.env.PORT ?? 3001);
@@ -35,6 +37,7 @@ app.use(
   })
 );
 app.use(express.json({ limit: "1mb" }));
+installVoice(app);
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
