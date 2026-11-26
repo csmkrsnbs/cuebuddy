@@ -1,1 +1,1 @@
-{"name":"cuebuddy-text-preview","version":"4.7.1","private":true,"engines":{"node":"22.x"},"dependencies":{"pdf-parse":"2.4.5","mammoth":"1.13.0"}}
+{"name":"cuebuddy-text-preview","version":"4.7.2","private":true,"engines":{"node":"22.x"},"dependencies":{"mammoth":"1.13.0","unpdf":"1.9.1"},"scripts":{"postinstall":"node scripts/test-pdf.cjs"}}
