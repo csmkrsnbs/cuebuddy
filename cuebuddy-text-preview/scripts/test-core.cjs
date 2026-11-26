@@ -40,5 +40,7 @@ check('ordinary technical text preserved',()=>{assert.equal(redact('MOSFET 24 V 
 check('local script reader has no network or mic',()=>{const html=read('reader.html');assert.doesNotMatch(html,/fetch\(|getUserMedia|RTCPeerConnection/);assert.match(html,/scaleX\(-1\)/);assert.match(html,/scaleY\(-1\)/);new Function(html.match(/<script>([\s\S]+)<\/script>/)[1])});
 r=await invoke(practice,{...p,domain:'custom'});check('custom profession required',()=>assert.equal(r.code,400));
 reply={ok:true,json:async()=>({text:'example'})};r=await invoke(practice,{...p,domain:'custom',role:'Mimar'});check('custom profession transcription',()=>assert.equal(r.code,200));
+check('presentation focus and controls',()=>{const h=read('reader.html');assert.match(h,/25dvh/);assert.match(h,/opacity:\.4/);assert.match(h,/2000/);assert.match(h,/value="90" step="5"/);for(let v=60;v<=220;v+=10)assert(h.includes('value="'+v+'"'));assert.match(h,/id="showControls"/)});
+check('AI disclosure remains visible',()=>{for(const f of ['index.html','teleprompter.html']){const h=read(f);assert.match(h,/class="disclosure">AI destekli · izinli prova/);assert.match(h,/class="technical-details"/)}});
 console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
 })().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
