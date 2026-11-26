@@ -1,4 +1,6 @@
 import express from "express";
+import { createHash, timingSafeEqual } from "node:crypto";
+import type { RequestHandler } from "express";
 import cors from "cors";
 import multer from "multer";
 import "dotenv/config";
@@ -35,6 +37,16 @@ app.use(
   })
 );
 app.use(express.json({ limit: "1mb" }));
+
+const requireAccessCode: RequestHandler = (req, res, next) => {
+  const expected = process.env.CUEBUDDY_VOICE_ACCESS_CODE;
+  const code = req.get("X-CueBuddy-Code");
+  if (!expected || expected.length < 16) { res.status(503).json({ error: "Erişim koruması henüz yapılandırılmadı." }); return; }
+  const hash = (value: string) => createHash("sha256").update(value, "utf8").digest();
+  if (!code || code.length > 256 || !timingSafeEqual(hash(code), hash(expected))) { res.status(401).json({ error: "Erişim kodu geçersiz." }); return; }
+  next();
+};
+app.post("/access", analyzeLimiter, requireAccessCode, (_req, res) => { res.json({ ok: true }); });
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 20 * 1024 * 1024 } });
 
@@ -80,7 +92,7 @@ app.get("/metrics", (_req, res) => {
   res.json(getUsageSnapshot());
 });
 
-app.post("/transcribe", transcribeLimiter, upload.single("audio"), async (req, res) => {
+app.post("/transcribe", transcribeLimiter, requireAccessCode, upload.single("audio"), async (req, res) => {
   const startedAt = Date.now();
 
   try {
@@ -117,7 +129,7 @@ app.post("/transcribe", transcribeLimiter, upload.single("audio"), async (req, r
   }
 });
 
-app.post("/analyze", analyzeLimiter, async (req, res) => {
+app.post("/analyze", analyzeLimiter, requireAccessCode, async (req, res) => {
   const startedAt = Date.now();
 
   try {
@@ -166,7 +178,7 @@ app.post("/analyze", analyzeLimiter, async (req, res) => {
   }
 });
 
-app.post("/feedback", async (req, res) => {
+app.post("/feedback", requireAccessCode, async (req, res) => {
   try {
     const { hintId, requestId, rating, comment } = req.body ?? {};
     const allowedRatings = new Set(["useful", "not_useful", "wrong", "offensive", "other"]);
