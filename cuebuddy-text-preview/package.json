@@ -1,1 +1,1 @@
-{"name":"cuebuddy-text-preview","version":"5.0.0-rc.14","private":true,"engines":{"node":"22.x"},"dependencies":{"mammoth":"1.13.0","unpdf":"1.9.1"},"scripts":{"postinstall":"npm test","test":"node scripts/test-core.cjs && node scripts/test-pdf.cjs"}}
+{"name":"cuebuddy-text-preview","version":"5.0.0-rc.15","private":true,"engines":{"node":"22.x"},"dependencies":{"mammoth":"1.13.0","unpdf":"1.9.1","sharp":"0.35.5"},"scripts":{"postinstall":"node scripts/build-pwa.cjs && npm test","test":"node scripts/test-core.cjs && node scripts/test-pdf.cjs"}}
