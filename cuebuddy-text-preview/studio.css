@@ -66,3 +66,8 @@ body .reader-mode .reading-panel{width:100%;max-width:100%}
 .studio-footer{flex-direction:column;gap:4px}
 }
 @media(max-width:360px){.studio-header{grid-template-columns:minmax(0,1fr)}.version-label{grid-column:1;grid-row:2}.studio-tabs{grid-row:3}.studio-intro h1{font-size:22px}body .practice-workspace .scores{grid-template-columns:minmax(0,1fr)}}
+
+/* RC14: mobile live workspace first, desktop order unchanged. */
+@media(max-width:950px){body:not(.reader-mode) .grid>#livePanel{grid-row:1;min-width:0}body:not(.reader-mode) .grid>#setupPanel{grid-row:2;min-width:0}body:not(.reader-mode) #setupPanel{scroll-margin-top:12px}.mobile-setup-link{display:inline-block;padding:9px 0;font-size:13px}} 
+@media(min-width:951px){.mobile-setup-link{display:none}}
+.session-active .mobile-setup-link{display:none}
