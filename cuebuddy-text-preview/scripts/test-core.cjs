@@ -49,5 +49,10 @@ check('transcript correction deletion',()=>assert.deepEqual(diff('the gate volta
 check('transcript correction unchanged',()=>assert.deepEqual(diff('KNX, DALI','knx dali'),{edits:0,words:2}));
 check('transcript correction empty reference',()=>assert.equal(diff('','text'),null));
 check('practice cancel and timeout guards',()=>{assert.match(diffSrc,/pendingRequest\?\.abort\(\)/);assert.match(diffSrc,/55000/);assert.match(diffSrc,/signal:controller.signal/)});
+check('voice setup explicitly hidden and inert',()=>{const a={hidden:false,inert:false,setAttribute(k,v){this[k]=v}};const fn=new Function('$',src.slice(src.indexOf('function setWorkspace('),src.indexOf('function phaseSet('))+'return setWorkspace')(()=>a);fn(true);assert.equal(a.hidden,true);assert.equal(a.inert,true);assert.equal(a['aria-hidden'],'true');fn(false);assert.equal(a.hidden,false);assert.equal(a.inert,false)});
+check('custom role inputs and reader link',()=>{for(const f of ['index.html','teleprompter.html']){const h=read(f);assert(h.includes('id="setupPanel"'));assert(h.includes('id="customRole"'));assert(h.includes('href="/reader.html"'))}});
+r=await invoke(session,{...s,domain:'custom'});check('custom voice role required',()=>assert.equal(r.code,400));
+reply={ok:true,text:async()=>'v=0'};r=await invoke(session,{...s,domain:'custom',role:'Mimar'});check('authorized custom voice profile',()=>{assert.equal(r.code,200);const conf=JSON.parse(calls.at(-1).opt.body.get('session'));assert(conf.instructions.includes('Mimar'));assert(conf.instructions.includes('undisclosed help'))});
+check('standalone reader stage separation',()=>{const h=read('reader.html');assert(h.includes('readerSetup").hidden=true'));assert(h.includes('readerSetup").hidden=false'));assert(h.includes('id="marginValue"'))});
 console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
 })().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
