@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <section class="control-card">
+        <section class="manual-card" aria-labelledby="accessTitle"><h2 id="accessTitle">Erişim kodu</h2><p>Teleprompter PRO ve Practice Lab ile aynı kodu kullanın. Kod doğrulanmadan analiz ve mikrofon başlatılmaz.</p><label for="accessCode">Erişim kodu</label><input id="accessCode" type="password" autocomplete="off" maxlength="256" style="display:block;width:100%;box-sizing:border-box;padding:12px;margin:8px 0;color:inherit;background:#101421;border:1px solid #393d53;border-radius:10px"><button id="verifyAccess" class="primary" type="button">Kodu doğrula</button><button id="lockAccess" class="ghost hidden" type="button">Erişimi kilitle</button><p id="accessState" role="status">Kilitli</p></section><section class="control-card">
           <div class="wave" id="wave" aria-hidden="true"></div>
           <button id="listenBtn" class="listen-btn"><span class="mic">●</span><span id="listenBtnText">Dinlemeyi başlat</span></button>
           <button id="stopBtn" class="secondary hidden">Durdur</button>
@@ -108,6 +108,6 @@
     </div>
   </div>
   <div id="toast" class="toast hidden"></div>
-  <script src="/app.js?v=2" defer></script>
+  <script src="/app.js?v=2.1" defer></script>
 </body>
 </html>
