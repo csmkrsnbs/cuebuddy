@@ -1,0 +1,40 @@
+{
+  "id": "/",
+  "name": "CueBuddy PRO — Prova Stüdyosu",
+  "short_name": "CueBuddy PRO",
+  "description": "Kişisel prova, sunum ve CV düzenleme stüdyosu.",
+  "lang": "tr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b101d",
+  "theme_color": "#141c2d",
+  "icons": [
+    {
+      "src": "/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mülakat provası",
+      "url": "/practice.html"
+    },
+    {
+      "name": "Metin provası",
+      "url": "/reader.html"
+    },
+    {
+      "name": "CV düzenle",
+      "url": "/cv.html"
+    }
+  ]
+}
