@@ -1,0 +1,17 @@
+const {createHash,timingSafeEqual}=require('node:crypto');
+const hash=s=>createHash('sha256').update(s).digest();
+const modes={engineering:'Answer engineering questions accurately. State necessary assumptions, units and uncertainty. Do not invent measurements or personal experience.',assistant:'Be a helpful general assistant.',training:'Conduct a simulated technical practice interview, one question at a time with feedback.',translation:'Translate spoken content into the selected language without commentary.'};
+const languages={tr:'Turkish',en:'English',auto:"the speaker's language"};
+module.exports=async function(req,res){
+res.setHeader('Cache-Control','no-store');
+if(req.method==='GET')return res.status(200).json({configured:!!process.env.OPENAI_API_KEY&&(process.env.CUEBUDDY_VOICE_ACCESS_CODE||'').length>=16,version:'3.1-text',output:'text',holdSeconds:30});
+if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
+const key=process.env.OPENAI_API_KEY,expected=process.env.CUEBUDDY_VOICE_ACCESS_CODE,code=req.headers['x-cuebuddy-code'];
+if(!key||!expected||expected.length<16)return res.status(503).json({error:'Motor henüz yapılandırılmadı.'});
+if(typeof code!=='string'||!timingSafeEqual(hash(code),hash(expected)))return res.status(401).json({error:'Erişim kodu geçersiz.'});
+const {sdp,mode,language,consent}=req.body||{};
+if(consent!==true||typeof sdp!=='string'||sdp.length>65536||!sdp.startsWith('v=0')||!Object.hasOwn(modes,mode)||!Object.hasOwn(languages,language)||(mode==='translation'&&language==='auto'))return res.status(400).json({error:'Geçersiz oturum parametreleri.'});
+const session={type:'realtime',model:process.env.OPENAI_REALTIME_MODEL||'gpt-realtime-2.1',output_modalities:['text'],max_output_tokens:350,instructions:'You are CueBuddy, a disclosed AI assistant for authorized use or personal practice. Do not impersonate a person. '+modes[mode]+' Respond in '+languages[language]+'. Keep answers brief, readable in 30 seconds, ideally 2 to 4 short sentences or 3 short bullets. Do not claim the human has experience they do not have.',audio:{input:{noise_reduction:{type:'near_field'},transcription:{model:'gpt-4o-mini-transcribe'},turn_detection:{type:'server_vad',threshold:0.5,prefix_padding_ms:300,silence_duration_ms:700,create_response:false,interrupt_response:false}}}};
+const form=new FormData();form.set('sdp',sdp);form.set('session',JSON.stringify(session));
+try{const upstream=await fetch('https://api.openai.com/v1/realtime/calls',{method:'POST',headers:{Authorization:'Bearer '+key,'OpenAI-Safety-Identifier':hash('cuebuddy-private-preview').toString('hex')},body:form,signal:AbortSignal.timeout(20000)});if(!upstream.ok){const e=await upstream.json().catch(()=>({}));const code=typeof e.error?.code==='string'&&/^[a-z0-9_]{1,80}$/i.test(e.error.code)?' · '+e.error.code:'';return res.status(502).json({error:'Motor bağlantısı reddedildi (HTTP '+upstream.status+code+').'});}const answer=await upstream.text();if(!answer.startsWith('v=0'))return res.status(502).json({error:'Geçersiz SDP yanıtı.'});res.setHeader('Content-Type','application/sdp');return res.status(200).send(answer);}catch{return res.status(502).json({error:'Motora ulaşılamadı.'});}
+};
