@@ -34,5 +34,11 @@ check('review opt-out stores nothing',()=>{review.reviewBegin(false,'test',1000)
 check('review dedup and late transcript',()=>{review.reviewBegin(true,'test',1000);review.reviewItem('x',1100);review.reviewItem('x',1200);review.reviewAnswer('x','answer','completed');review.reviewTranscript('x','question');assert.equal(review.rows().length,1);assert.equal(review.rows()[0].question,'question')});
 check('completed review immutable',()=>{review.reviewAnswer('x','other','incomplete');assert.equal(review.rows()[0].answer,'answer')});
 check('interrupted review status',()=>{review.reviewItem('y',1300);review.reviewEnd('stopped',1400);assert.equal(review.rows()[1].state,'interrupted')});
+const redsrc=read('context.js'),redact=new Function(redsrc.slice(redsrc.indexOf('function redact('),redsrc.indexOf('function syncGate('))+'return redact')();
+check('local masking email phone and identifier',()=>{const x=redact('test@example.com +90 532 123 45 67 12345678901 MOSFET');assert.equal(x.count,3);assert.equal(x.value,'[GİZLİ] [GİZLİ] [GİZLİ] MOSFET')});
+check('ordinary technical text preserved',()=>{assert.equal(redact('MOSFET 24 V 80 kelime/dk').value,'MOSFET 24 V 80 kelime/dk')});
+check('local script reader has no network or mic',()=>{const html=read('reader.html');assert.doesNotMatch(html,/fetch\(|getUserMedia|RTCPeerConnection/);assert.match(html,/scaleX\(-1\)/);assert.match(html,/scaleY\(-1\)/);new Function(html.match(/<script>([\s\S]+)<\/script>/)[1])});
+r=await invoke(practice,{...p,domain:'custom'});check('custom profession required',()=>assert.equal(r.code,400));
+reply={ok:true,json:async()=>({text:'example'})};r=await invoke(practice,{...p,domain:'custom',role:'Mimar'});check('custom profession transcription',()=>assert.equal(r.code,200));
 console.log('CueBuddy core self-test PASS: '+n+' checks; all upstream calls mocked, no paid requests.');
 })().catch(e=>{console.error('CueBuddy core self-test FAILED',e.message);process.exitCode=1});
