@@ -71,3 +71,6 @@ body .reader-mode .reading-panel{width:100%;max-width:100%}
 @media(max-width:950px){body:not(.reader-mode) .grid>#livePanel{grid-row:1;min-width:0}body:not(.reader-mode) .grid>#setupPanel{grid-row:2;min-width:0}body:not(.reader-mode) #setupPanel{scroll-margin-top:12px}.mobile-setup-link{display:inline-block;padding:9px 0;font-size:13px}} 
 @media(min-width:951px){.mobile-setup-link{display:none}}
 .session-active .mobile-setup-link{display:none}
+
+/* Public legal links; no additional tracking or storage. */
+.legal-links{display:flex;flex-wrap:wrap;gap:6px 14px;flex:1 1 100%;font-size:12px}.legal-links a,.legal-inline a{color:#c7b9ff;text-decoration:underline;text-underline-offset:2px}.legal-inline{font-size:12px;line-height:1.5;margin:7px 0}.legal-links a:focus-visible,.legal-inline a:focus-visible{outline:2px solid #c6b7ff;outline-offset:3px}
