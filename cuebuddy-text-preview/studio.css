@@ -23,3 +23,46 @@ body:not(.reader-mode)>main{max-width:1320px;width:100%;padding:20px 24px;margin
 body button:disabled,body .panel button:disabled,body .context-panel button:disabled,body #stage button:disabled{opacity:1;color:var(--disabled-text);background:var(--disabled-bg);border:1px solid var(--disabled-border);cursor:not-allowed;box-shadow:none}
 body button.primary:disabled,body .panel .primary:disabled{background:var(--disabled-primary);color:var(--disabled-text);border:1px solid #52466f}
 .studio-intro p,.panel small,.panel .note,.panel .context-note,.panel .practice-note,.panel .session-note p,.script-guide p,.guide-item small,.cv-empty p,.reader-tools label,.technical-details{color:var(--muted)}
+
+/* RC13 mobile reflow: constrain intrinsic widths, not the viewport. */
+html,body{width:100%;min-width:0;margin:0}
+body:not(.reader-mode)>main{box-sizing:border-box;min-width:0;max-inline-size:min(1320px,100%)}
+.studio-header,.studio-tabs,.studio-intro,.studio-footer,.grid,.workspace,.script-workspace,.panel,.field-grid,.doc-grid,.context-panel,.context-field,.context-row,.action-row{min-width:0;max-width:100%;box-sizing:border-box}
+.studio-brand,.studio-brand>span:last-child,.studio-intro>div,.studio-footer>span{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.studio-brand{white-space:normal}
+.studio-tabs a{min-width:0;max-width:100%;box-sizing:border-box}
+.panel :is(input:not([type=checkbox]),select,textarea,button),.context-panel input[type=file]{min-width:0;max-width:100%;box-sizing:border-box}
+.field-grid>* ,.doc-grid>* ,.action-row>* ,.grid>* ,.workspace>* ,.script-workspace>* ,.row>*{min-width:0}
+.context-panel,.context-row,.context-field, .session-note,.setup-guide,.studio-intro p,.studio-footer,.private-label{overflow-wrap:anywhere}
+.context-panel label,.check,.context-consent{overflow-wrap:anywhere}
+.context-panel input[type=file]{width:100%}
+@media(max-width:950px){
+body:not(.reader-mode)>main{width:100%;max-width:100%;padding:14px}
+body:not(.reader-mode) .grid,body:not(.reader-mode) .grid.practice-workspace,.workspace,.script-workspace{grid-template-columns:minmax(0,1fr)!important}
+.studio-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.studio-tabs{grid-column:1/-1;grid-row:2;order:0;width:100%;max-width:100%;grid-template-columns:repeat(4,minmax(0,1fr))}
+.studio-tabs a{white-space:normal;overflow-wrap:anywhere;text-align:center}
+.version-label{grid-column:2;grid-row:1;font-size:10px}
+}
+@media(max-width:600px){
+body:not(.reader-mode)>main{padding:12px max(10px,env(safe-area-inset-right)) 12px max(10px,env(safe-area-inset-left))}
+.studio-tabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:4px}
+.studio-tabs a{font-size:13px;min-height:44px;padding:7px 5px;line-height:1.3;display:grid;place-items:center;white-space:normal}
+.studio-brand{font-size:17px;gap:7px}.studio-brand small{font-size:8px;white-space:normal;line-height:1.3}
+.studio-brand .brand-mark{width:34px;height:34px}
+.studio-intro{display:block;margin:16px 0 12px}.studio-intro h1{font-size:24px;overflow-wrap:anywhere}.studio-intro p{font-size:13px;line-height:1.5}.private-label{margin-top:8px;white-space:normal;text-align:left}
+.panel{padding:12px}
+body .field-grid,body .doc-grid,body .action-row{grid-template-columns:minmax(0,1fr)!important}
+body .action-row button{width:100%;min-width:0;min-height:44px}
+body .panel :is(input:not([type=checkbox]):not([type=file]),select,textarea){font-size:16px;min-height:44px}
+body .panel button{min-height:44px}
+body .panel .context-row button{min-height:44px}
+.context-row,.reader-tools,.reader-nav,.status,.row{flex-wrap:wrap;max-width:100%}
+body .practice-workspace .scores,body .practice-workspace .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+body .practice-workspace .row>*{flex:1 1 100%;min-width:0}
+body .reader-tools select{min-width:0;max-width:100%}
+body .reader-mode .reading-panel{width:100%;max-width:100%}
+.paper-shell,.preview-frame{min-width:0;max-width:100%}
+.studio-footer{flex-direction:column;gap:4px}
+}
+@media(max-width:360px){.studio-header{grid-template-columns:minmax(0,1fr)}.version-label{grid-column:1;grid-row:2}.studio-tabs{grid-row:3}.studio-intro h1{font-size:22px}body .practice-workspace .scores{grid-template-columns:minmax(0,1fr)}}
