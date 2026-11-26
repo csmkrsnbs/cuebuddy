@@ -5,12 +5,12 @@ const domains={"energy":"Elektrik-Elektronik Mühendisi","systems":"Bilgisayar M
 const languages={tr:'Turkish',en:'English',auto:"the speaker's language"};
 module.exports=async function(req,res){
 res.setHeader('Cache-Control','no-store');
-if(req.method==='GET')return res.status(200).json({configured:!!process.env.OPENAI_API_KEY&&(process.env.CUEBUDDY_VOICE_ACCESS_CODE||'').length>=16,version:'4.7.4-pro',output:'text',holdSeconds:30});
+if(req.method==='GET')return res.status(200).json({configured:!!process.env.OPENAI_API_KEY&&(process.env.CUEBUDDY_VOICE_ACCESS_CODE||'').length>=16,version:'4.7.5-pro',output:'text',holdSeconds:30});
 if(req.method!=='POST')return res.status(405).json({error:'Method not allowed'});
 const key=process.env.OPENAI_API_KEY,expected=process.env.CUEBUDDY_VOICE_ACCESS_CODE,code=req.headers['x-cuebuddy-code'];
 if(!key||!expected||expected.length<16)return res.status(503).json({error:'Motor henüz yapılandırılmadı.'});
 if(typeof code!=='string'||!timingSafeEqual(hash(code),hash(expected)))return res.status(401).json({error:'Erişim kodu geçersiz.'});
-const {sdp,mode,language,consent,length="normal",hold=30,pace=140,domain="energy",role="",format="expert",inputLanguage="auto",terms="",jobDescription="",cvText="",documentConsent=false}=req.body||{};
+const {sdp,mode,language,consent,length="normal",hold=30,pace=80,domain="energy",role="",format="expert",inputLanguage="auto",terms="",jobDescription="",cvText="",documentConsent=false}=req.body||{};
 if(![80,100,140,180,220].includes(pace)||!["short","normal","technical"].includes(length)||![15,30,45,60].includes(hold)||consent!==true||typeof sdp!=='string'||sdp.length>65536||!sdp.startsWith('v=0')||!Object.hasOwn(modes,mode)||!Object.hasOwn(languages,language)||(mode==='translation'&&language==='auto'))return res.status(400).json({error:'Geçersiz oturum parametreleri.'});
 if(!["auto","en","tr"].includes(inputLanguage)||typeof terms!=="string"||terms.length>180)return res.status(400).json({error:"Geçersiz konuşma dili veya terim listesi."});
 if(typeof domain!=='string'||!Object.hasOwn(domains,domain)||typeof role!=='string'||role.length>100||typeof format!=='string'||!Object.hasOwn(formats,format)||(domain==='custom'&&!role.trim()&&['engineering','training'].includes(mode)))return res.status(400).json({error:'Geçersiz meslek profili.'});
