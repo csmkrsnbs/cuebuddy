@@ -1,7 +1,7 @@
 {
   "release": "V5.5.2",
   "date": "2026-11-27",
-  "status": "PARTIAL_PUBLIC_SNAPSHOT_NOT_DEPLOYABLE",
+  "status": "PARTIAL_RECOVERY_24_OF_30_FILES",
   "source": "https://cuebuddy.sokakvitrini.com",
   "deploymentUrl": "https://cuebuddy-voice-preview-nozjp4uee-sokak-vitrini.vercel.app",
   "oldRepositoryCommit": "fa1484619266dcc3f424fbe6ddc69e466f1ced9b",
@@ -9,12 +9,16 @@
     {
       "path": "api/cv.js",
       "vercelContentUid": "e1435c0b3b49b4aeac60b1495ea6505ebb6523f7",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     },
     {
       "path": "api/document.js",
       "vercelContentUid": "3a0c9ba98305fd782d3e4e3d92024fb44b20d0b9",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     },
     {
       "path": "api/practice.js",
@@ -29,17 +33,23 @@
     {
       "path": "assets/apple-touch-icon.png",
       "vercelContentUid": "213461b4b3db86cef5eb2473107a20f0c0fd26f6",
-      "archived": false
+      "archived": false,
+      "reproducibleFrom": "assets/icon.svg + scripts/build-pwa.cjs + sharp 0.35.5",
+      "verification": "regeneration recipe verified; bytes not archived"
     },
     {
       "path": "assets/icon-192.png",
       "vercelContentUid": "865f0c144e1ee9d2c8cc7424832e6307e1f25d1d",
-      "archived": false
+      "archived": false,
+      "reproducibleFrom": "assets/icon.svg + scripts/build-pwa.cjs + sharp 0.35.5",
+      "verification": "regeneration recipe verified; bytes not archived"
     },
     {
       "path": "assets/icon-512.png",
       "vercelContentUid": "e7d5316bcb50fc5c6344f5a6f492dfda8f6645e1",
-      "archived": false
+      "archived": false,
+      "reproducibleFrom": "assets/icon.svg + scripts/build-pwa.cjs + sharp 0.35.5",
+      "verification": "regeneration recipe verified; bytes not archived"
     },
     {
       "path": "assets/icon.svg",
@@ -99,7 +109,9 @@
     {
       "path": "package.json",
       "vercelContentUid": "57e6b35973047d6bf0645b0d9e59382d8a1f6f41",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     },
     {
       "path": "practice.html",
@@ -124,7 +136,9 @@
     {
       "path": "scripts/build-pwa.cjs",
       "vercelContentUid": "daa6a0539998553ba10f8ac54fdeae375869669d",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     },
     {
       "path": "scripts/test-core.cjs",
@@ -134,7 +148,9 @@
     {
       "path": "scripts/test-pdf.cjs",
       "vercelContentUid": "8a0ec4479099694a6257ba30535b60064df2470c",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     },
     {
       "path": "studio.css",
@@ -154,12 +170,20 @@
     {
       "path": "vercel.json",
       "vercelContentUid": "eb373d5e9c6f08f320d0db35095f0fc35c67b723",
-      "archived": false
+      "archived": true,
+      "verification": "SHA-1 exact match",
+      "archive": "verified-source-base64.json"
     }
   ],
   "notes": [
-    "Public HTTP response snapshots, not byte-for-byte source verification. HTML teleprompter is identical to index at capture.",
-    "Backend API, build/test scripts, package.json, vercel.json, binary PNG assets are not archived from the current deployment. Older repository versions must not be treated as current.",
+    "18 public HTTP response snapshots; not byte-for-byte source verification.",
+    "6 additional files archived with exact Vercel SHA-1 match. Three binary icons have a verified regeneration recipe but are not archived.",
+    "Missing full api/practice.js, api/session.js, scripts/test-core.cjs. Vercel connector truncates these source responses. RC16 copies do not match current SHA-1.",
     "No secrets or environment values included. Existing production deployment remains the primary recovery point."
-  ]
+  ],
+  "archiveCounts": {
+    "publicResponseSnapshots": 18,
+    "byteVerified": 6,
+    "missing": 6
+  }
 }
