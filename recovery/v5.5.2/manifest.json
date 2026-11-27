@@ -1,7 +1,7 @@
 {
   "release": "V5.5.2",
   "date": "2026-11-27",
-  "status": "PARTIAL_RECOVERY_24_OF_30_FILES",
+  "status": "ALL_27_NON_PNG_FILES_BYTE_VERIFIED",
   "source": "https://cuebuddy.sokakvitrini.com",
   "deploymentUrl": "https://cuebuddy-voice-preview-nozjp4uee-sokak-vitrini.vercel.app",
   "oldRepositoryCommit": "fa1484619266dcc3f424fbe6ddc69e466f1ced9b",
@@ -23,12 +23,16 @@
     {
       "path": "api/practice.js",
       "vercelContentUid": "66e940a185718d75cfef00dc811a55364f0e1f2b",
-      "archived": false
+      "archived": true,
+      "archive": "recovered/api/practice.js",
+      "verification": "SHA-1 exact match; owner export and GitHub readback verified"
     },
     {
       "path": "api/session.js",
       "vercelContentUid": "3aedea26f96d64e86249f6bba083bc6e0f6fa7cc",
-      "archived": false
+      "archived": true,
+      "archive": "recovered/api/session.js",
+      "verification": "SHA-1 exact match; owner export and GitHub readback verified"
     },
     {
       "path": "assets/apple-touch-icon.png",
@@ -54,57 +58,79 @@
     {
       "path": "assets/icon.svg",
       "vercelContentUid": "3c476626af85db924ff89b90a4368aadf74b0188",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-assets.json"
     },
     {
       "path": "assets/og.svg",
       "vercelContentUid": "ca90eba9cfba3635a6e00a53872213cb37cfcd85",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-assets.json"
     },
     {
       "path": "compact-ui.js",
       "vercelContentUid": "6b97813dddb44755955d821c86b05db2905e1ac4",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "context.js",
       "vercelContentUid": "c37f8cb423df826e641589139f68a1d13eebb0a8",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "cv.html",
       "vercelContentUid": "7504468a4412446f4eb967f93288bbf225678621",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "cv.js",
       "vercelContentUid": "f13f3a177f694e183748c379c6107304236c7c71",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "index.html",
       "vercelContentUid": "2b5d7f3b29a09919a37164c1c615245e660e4d41",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "teleprompter.html",
       "vercelContentUid": "2b5d7f3b29a09919a37164c1c615245e660e4d41",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "legal.html",
       "vercelContentUid": "42d38ca5fa38af55c8c27b99d6dbb18b69fed753",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "manifest.webmanifest",
       "vercelContentUid": "e8743019ecd6f4742dc5c030ba05a3f20418ae54",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-assets.json"
     },
     {
       "path": "offline.html",
       "vercelContentUid": "106347bffccb0fca7527f5d62d4d516dd74653af",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "package.json",
@@ -116,22 +142,30 @@
     {
       "path": "practice.html",
       "vercelContentUid": "4f82afa4d9994c447993f300e5374a7ea42b513c",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "practice.js",
       "vercelContentUid": "66b55fdabb5d726f0a2204eb28b31b7033fefc07",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "pwa.js",
       "vercelContentUid": "5bf869844f26cd32c76dcd6c1d9a4e2537a802b9",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "reader.html",
       "vercelContentUid": "5aa1196d3f18e27fca02f643b5bf7ce1118599a6",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-html.json"
     },
     {
       "path": "scripts/build-pwa.cjs",
@@ -143,7 +177,9 @@
     {
       "path": "scripts/test-core.cjs",
       "vercelContentUid": "de8424c46f28cbd4d595bfa74ec42d0fdc5e69d0",
-      "archived": false
+      "archived": true,
+      "archive": "recovered/scripts/test-core.cjs",
+      "verification": "SHA-1 exact match; owner export and GitHub readback verified"
     },
     {
       "path": "scripts/test-pdf.cjs",
@@ -155,17 +191,23 @@
     {
       "path": "studio.css",
       "vercelContentUid": "1959a233a13bf7d3894c3809443ece2945d00523",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "sw.js",
       "vercelContentUid": "c7c053ea6c3560b0c4df73d35570be1f2e507071",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "text.js",
       "vercelContentUid": "a920e2928838522c636392800c8544432205133a",
-      "archived": true
+      "archived": true,
+      "verification": "SHA-1 exact match; GitHub archived HTTP snapshot compared with Vercel UID",
+      "archive": "public-scripts.json"
     },
     {
       "path": "vercel.json",
@@ -176,14 +218,14 @@
     }
   ],
   "notes": [
-    "18 public HTTP response snapshots; not byte-for-byte source verification.",
-    "6 additional files archived with exact Vercel SHA-1 match. Three binary icons have a verified regeneration recipe but are not archived.",
-    "Missing full api/practice.js, api/session.js, scripts/test-core.cjs. Vercel connector truncates these source responses. RC16 copies do not match current SHA-1.",
-    "No secrets or environment values included. Existing production deployment remains the primary recovery point."
+    "All 27 non-PNG source files archived and independently compared to original Vercel SHA-1.",
+    "Three PNG source assets are regenerable from icon.svg using verified build script, but original binary bytes not independently archived.",
+    "No production changes or paid inference requests. No deployment from archive; full restore test still pending."
   ],
   "archiveCounts": {
-    "publicResponseSnapshots": 18,
-    "byteVerified": 6,
-    "missing": 6
+    "byteVerified": 27,
+    "publicResponseSnapshotsUnverified": 0,
+    "generatedPngNotArchived": 3,
+    "missingCriticalSource": 0
   }
 }
