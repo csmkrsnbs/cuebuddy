@@ -74,3 +74,39 @@ body .reader-mode .reading-panel{width:100%;max-width:100%}
 
 /* Public legal links; no additional tracking or storage. */
 .legal-links{display:flex;flex-wrap:wrap;gap:6px 14px;flex:1 1 100%;font-size:12px}.legal-links a,.legal-inline a{color:#c7b9ff;text-decoration:underline;text-underline-offset:2px}.legal-inline{font-size:12px;line-height:1.5;margin:7px 0}.legal-links a:focus-visible,.legal-inline a:focus-visible{outline:2px solid #c6b7ff;outline-offset:3px}
+
+/* V6.5 secondary studio screens; screen only, opt-in. */
+@media screen {
+.unified-module{--unified-border:#30394e;--unified-surface:#151d2d}
+.unified-module .studio-intro{margin:12px 0;gap:10px}
+.unified-module .studio-intro h1{font-size:clamp(22px,2.4vw,29px);margin:3px 0 4px}
+.unified-module .studio-intro p{font-size:12px;line-height:1.5}
+.unified-module .panel:not(.paper){padding:14px;border-radius:12px;background:var(--unified-surface);border-color:var(--unified-border)}
+.unified-module .panel>h2{font-size:15px;margin-bottom:9px}
+.unified-module .studio-footer{margin-top:12px;padding:10px 0;gap:6px}
+.unified-module .legal-links{gap:6px 14px;justify-content:center}
+.unified-module .practice-workspace .stack>*+*{margin-top:10px}
+.unified-module .practice-workspace .questionbox{padding:14px;margin:10px 0}
+.unified-module .practice-workspace .question{font-size:clamp(20px,2.4vw,30px);line-height:1.4}
+.unified-module .practice-workspace .divider{margin:12px 0}
+.unified-module .practice-workspace .stats>div,.unified-module .practice-workspace .score{padding:9px}
+.unified-module .script-workspace,.unified-module .workspace{gap:12px}
+.unified-module .script-editor textarea{min-height:clamp(180px,32vh,320px)}
+.unified-module .guide-item{padding:9px 0}
+.unified-module .editor .field{margin-block:9px}
+.unified-module .editor .upload-box{padding:10px}
+.unified-module .cv-empty{min-height:180px}
+@media(min-width:1051px){
+body.unified-module:not(.reader-mode)>main:not([hidden]){display:grid;grid-template-columns:210px minmax(0,1fr);grid-template-rows:auto 1fr auto;gap:0 16px;max-width:1440px;padding:14px 20px;min-height:100dvh}
+.unified-module main>.studio-header{grid-column:1;grid-row:1/4;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:16px;border:0;border-right:1px solid var(--unified-border);padding:4px 12px 12px 0}
+.unified-module .studio-tabs{display:flex;flex-direction:column;align-items:stretch;order:0;width:100%;background:transparent;border:0;padding:0;gap:5px}
+.unified-module .studio-tabs a{display:flex;justify-content:flex-start;min-height:40px;padding:9px 12px;border-radius:9px}
+.unified-module .studio-tabs a:hover{background:#202840}
+.unified-module .version-label{font-size:10px;padding:0 10px}
+.unified-module main>.studio-intro,.unified-module main>.practice-workspace,.unified-module main>.workspace,.unified-module main>.script-workspace,.unified-module main>.studio-footer{grid-column:2;min-width:0}
+.unified-module .practice-workspace{grid-template-columns:minmax(230px,290px) minmax(0,1fr);gap:12px}
+.unified-module .practice-workspace .studio-settings,.unified-module .editor{max-height:calc(100dvh - 160px);overflow:auto;scrollbar-width:thin}
+.unified-module .script-workspace{grid-template-columns:minmax(0,1.8fr) minmax(220px,1fr)}
+}
+@media(max-width:600px){.unified-module .panel:not(.paper){padding:12px}.unified-module .studio-tabs a{min-height:44px}.unified-module .studio-footer .legal-links{justify-content:flex-start}}
+}
