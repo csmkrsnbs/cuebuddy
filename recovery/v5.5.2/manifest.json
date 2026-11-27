@@ -1,0 +1,165 @@
+{
+  "release": "V5.5.2",
+  "date": "2026-11-27",
+  "status": "PARTIAL_PUBLIC_SNAPSHOT_NOT_DEPLOYABLE",
+  "source": "https://cuebuddy.sokakvitrini.com",
+  "deploymentUrl": "https://cuebuddy-voice-preview-nozjp4uee-sokak-vitrini.vercel.app",
+  "oldRepositoryCommit": "fa1484619266dcc3f424fbe6ddc69e466f1ced9b",
+  "sourceFileInventory": [
+    {
+      "path": "api/cv.js",
+      "vercelContentUid": "e1435c0b3b49b4aeac60b1495ea6505ebb6523f7",
+      "archived": false
+    },
+    {
+      "path": "api/document.js",
+      "vercelContentUid": "3a0c9ba98305fd782d3e4e3d92024fb44b20d0b9",
+      "archived": false
+    },
+    {
+      "path": "api/practice.js",
+      "vercelContentUid": "66e940a185718d75cfef00dc811a55364f0e1f2b",
+      "archived": false
+    },
+    {
+      "path": "api/session.js",
+      "vercelContentUid": "3aedea26f96d64e86249f6bba083bc6e0f6fa7cc",
+      "archived": false
+    },
+    {
+      "path": "assets/apple-touch-icon.png",
+      "vercelContentUid": "213461b4b3db86cef5eb2473107a20f0c0fd26f6",
+      "archived": false
+    },
+    {
+      "path": "assets/icon-192.png",
+      "vercelContentUid": "865f0c144e1ee9d2c8cc7424832e6307e1f25d1d",
+      "archived": false
+    },
+    {
+      "path": "assets/icon-512.png",
+      "vercelContentUid": "e7d5316bcb50fc5c6344f5a6f492dfda8f6645e1",
+      "archived": false
+    },
+    {
+      "path": "assets/icon.svg",
+      "vercelContentUid": "3c476626af85db924ff89b90a4368aadf74b0188",
+      "archived": true
+    },
+    {
+      "path": "assets/og.svg",
+      "vercelContentUid": "ca90eba9cfba3635a6e00a53872213cb37cfcd85",
+      "archived": true
+    },
+    {
+      "path": "compact-ui.js",
+      "vercelContentUid": "6b97813dddb44755955d821c86b05db2905e1ac4",
+      "archived": true
+    },
+    {
+      "path": "context.js",
+      "vercelContentUid": "c37f8cb423df826e641589139f68a1d13eebb0a8",
+      "archived": true
+    },
+    {
+      "path": "cv.html",
+      "vercelContentUid": "7504468a4412446f4eb967f93288bbf225678621",
+      "archived": true
+    },
+    {
+      "path": "cv.js",
+      "vercelContentUid": "f13f3a177f694e183748c379c6107304236c7c71",
+      "archived": true
+    },
+    {
+      "path": "index.html",
+      "vercelContentUid": "2b5d7f3b29a09919a37164c1c615245e660e4d41",
+      "archived": true
+    },
+    {
+      "path": "teleprompter.html",
+      "vercelContentUid": "2b5d7f3b29a09919a37164c1c615245e660e4d41",
+      "archived": true
+    },
+    {
+      "path": "legal.html",
+      "vercelContentUid": "42d38ca5fa38af55c8c27b99d6dbb18b69fed753",
+      "archived": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "vercelContentUid": "e8743019ecd6f4742dc5c030ba05a3f20418ae54",
+      "archived": true
+    },
+    {
+      "path": "offline.html",
+      "vercelContentUid": "106347bffccb0fca7527f5d62d4d516dd74653af",
+      "archived": true
+    },
+    {
+      "path": "package.json",
+      "vercelContentUid": "57e6b35973047d6bf0645b0d9e59382d8a1f6f41",
+      "archived": false
+    },
+    {
+      "path": "practice.html",
+      "vercelContentUid": "4f82afa4d9994c447993f300e5374a7ea42b513c",
+      "archived": true
+    },
+    {
+      "path": "practice.js",
+      "vercelContentUid": "66b55fdabb5d726f0a2204eb28b31b7033fefc07",
+      "archived": true
+    },
+    {
+      "path": "pwa.js",
+      "vercelContentUid": "5bf869844f26cd32c76dcd6c1d9a4e2537a802b9",
+      "archived": true
+    },
+    {
+      "path": "reader.html",
+      "vercelContentUid": "5aa1196d3f18e27fca02f643b5bf7ce1118599a6",
+      "archived": true
+    },
+    {
+      "path": "scripts/build-pwa.cjs",
+      "vercelContentUid": "daa6a0539998553ba10f8ac54fdeae375869669d",
+      "archived": false
+    },
+    {
+      "path": "scripts/test-core.cjs",
+      "vercelContentUid": "de8424c46f28cbd4d595bfa74ec42d0fdc5e69d0",
+      "archived": false
+    },
+    {
+      "path": "scripts/test-pdf.cjs",
+      "vercelContentUid": "8a0ec4479099694a6257ba30535b60064df2470c",
+      "archived": false
+    },
+    {
+      "path": "studio.css",
+      "vercelContentUid": "1959a233a13bf7d3894c3809443ece2945d00523",
+      "archived": true
+    },
+    {
+      "path": "sw.js",
+      "vercelContentUid": "c7c053ea6c3560b0c4df73d35570be1f2e507071",
+      "archived": true
+    },
+    {
+      "path": "text.js",
+      "vercelContentUid": "a920e2928838522c636392800c8544432205133a",
+      "archived": true
+    },
+    {
+      "path": "vercel.json",
+      "vercelContentUid": "eb373d5e9c6f08f320d0db35095f0fc35c67b723",
+      "archived": false
+    }
+  ],
+  "notes": [
+    "Public HTTP response snapshots, not byte-for-byte source verification. HTML teleprompter is identical to index at capture.",
+    "Backend API, build/test scripts, package.json, vercel.json, binary PNG assets are not archived from the current deployment. Older repository versions must not be treated as current.",
+    "No secrets or environment values included. Existing production deployment remains the primary recovery point."
+  ]
+}
